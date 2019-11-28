@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MyForm - NotSoEasy plugin jQuery</title>
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../../local_lib/fontawesome-free-5.11.2-web/css/all.min.css">
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="lib/form-plugin.js"></script>
+  <script>
+    // Run the Plugin
+    $(document).ready(function() {
+      var myForm = $('#app').myForm({
+        'css': {
+          padding: '15px',
+          margin: '10px',
+          color: 'green'
+        },
+        form: [{
+          id: '1',
+          type: 'text',
+          name: 'nom',
+          required: true,
+          placeholder: 'entrer votre nom',
+          options: {
+            error: 'erreur',
+            regex: '[a-zA-Z0-9]{3,}',
+            class: 'error',
+          }
+        }]
+      })
+    });
+  </script>
+</body>
+</html>

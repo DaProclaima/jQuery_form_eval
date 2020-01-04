@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <title>PokeAPI</title>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>Rechercher</h1>
+  </header>
+  <section>
+    <form id="search-form" name="search-form">
+      <div class="fieldcontainer">
+<!--        <select name="domain" id="domain">-->
+<!--          <option value="">Sélectionner le type d'information à chercher</option>-->
+<!--        </select>-->
+        <input type="search" id="query" class="search-field" placeholder="chercher une information sur">
+        <input type="submit" name="search-btn" id="search-btn" value="send">
+      </div>
+    </form>
+
+    <ul id="results"></ul>
+    <div id="buttons"></div>
+  </section>
+  <section id="pokemon"></section>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="lib/searchEngine.js"></script>
+</html>

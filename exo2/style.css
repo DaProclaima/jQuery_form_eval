@@ -25,3 +25,14 @@ body{
   font-size: 1.6rem;
   background: lightblue;
 }
+
+.card-pokemon{
+  margin-top:0.5rem;
+  margin-left:1rem;
+  padding-top:0.2rem;
+  padding-left:0.5rem;
+  padding-bottom:1rem;
+  background-color: bisque;
+  width: 30%;
+
+}

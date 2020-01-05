@@ -29,18 +29,30 @@ $(document).ready(function () {
     // let data = JSON.stringify(response);
     let data = response;
     // console.log(data);
-    let pokemonCard = '<div class="card-pokemon" id="card-' +data.id+'">'
-      +'<div>'
-        +'<div><span class="name">Nom: '+data.name+ '</span></div>'
-        +'<div class="image"><img src="'+data.sprites.front_default+ '"></div>'
-        +'<div><span class="weight">Poid: '+data.weight+ 'kg</span></div>'
-        +'<div><span class="types">Type: '+data.types[0].type.name+ '</span></div>'
-        +'<div class="select-level"></div>'
-      +'</div>';
+    let pokemonCard = '<div class="card-pokemon" id="card-' +data.id+'">'+
+      '<div>'+
+        '<div><span class="name">Nom: '+data.name+ '</span></div>'+
+        '<div class="image"><img src="'+data.sprites.front_default+ '"></div>'+
+        '<div><span class="weight">Poid: '+data.weight+ 'kg</span></div>'+
+        '<div class="types"><span class="type-1" >Type 1: '+data.types[0].type.name+ '</span><br>';
+    if(data.types[1]){
+      pokemonCard+= '<span class="type-1" >Type 2: '+data.types[1].type.name+ '</span>';
+    }
+    pokemonCard +='</div>'+
+        '<div class="select-level"></div>'+
+        '<div class="stats">' +
+          '<span class="speed">Vitesse: '+ data.stats[0].base_stat +'</span><br>'+
+          '<span class="special-defense">Défense spéciale: '+ data.stats[1].base_stat +'</span><br>'+
+          '<span class="special-attack">Attaque spéciale: '+ data.stats[2].base_stat +'</span><br>'+
+          '<span class="defense">Défense: '+ data.stats[3].base_stat +'</span><br>'+
+          '<span class="attack">Attaque: '+ data.stats[4].base_stat +'</span><br>'+
+          '<span class="hp">Points de vie: '+ data.stats[5].base_stat +'</span><br>'+
+        '</div>'+
+      '</div>';
 
 
     $('#list-card').append(pokemonCard);
-    generateLvSelectEl('.select-level');
+    generateLvSelectEl('#card-'+ data.id + ' .select-level');
   }
 
 

@@ -34,5 +34,8 @@ body{
   padding-bottom:1rem;
   background-color: bisque;
   width: 30%;
+}
 
+.query-error{
+  border-color:red
 }

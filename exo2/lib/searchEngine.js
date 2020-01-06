@@ -50,7 +50,7 @@ $(document).ready(function () {
 
 
   function render(data) {
-    let pokemonCard = '<div class="card-pokemon" id="card-' + data.id + '">' +
+    let pokemonCard = '<div class="card-pokemon" id="card-pokemon-' + data.id + '">' +
       '<div>' +
       '<div><span class="name">Nom: ' + data.name + '</span></div>' +
       '<div class="image"><img src="' + data.sprites.front_default + '"></div>' +
@@ -61,8 +61,8 @@ $(document).ready(function () {
     }
     pokemonCard += '</div>' +
       '<div class="select-level"></div>' +
-      '<div id="stats-'+data.name+ '">' +
-      '<span class="stat-level">Stats de base</span><br>'+
+      '<div id="stats-' + data.name + '">' +
+      '<span class="stat-level">Stats de base</span><br>' +
       '<span class="speed">Vitesse: ' + data.stats[0].base_stat + '</span><br>' +
       '<span class="special-defense">Défense spéciale: ' + data.stats[1].base_stat + '</span><br>' +
       '<span class="special-attack">Attaque spéciale: ' + data.stats[2].base_stat + '</span><br>' +
@@ -73,11 +73,21 @@ $(document).ready(function () {
       '</div>';
 
 
-    $('#list-card').append(pokemonCard);
-    generateLvSelectEl('#card-' + data.id + ' .select-level');
-    $('#card-' + data.id + ' #niveau').change(function (e) {
-      calculateStat(data, $('#card-' + data.id + ' #niveau').val());
-    });
+    if(!document.querySelector('#card-pokemon-' + data.id)) {
+
+      $('#list-card').append(pokemonCard);
+      generateLvSelectEl('#card-pokemon-' + data.id + ' .select-level');
+      $('#card-pokemon-' + data.id + ' #niveau').change(function (e) {
+        calculateStat(data, $('#card-' + data.id + ' #niveau').val());
+      });
+    } else{
+
+      $('#card-pokemon-' + data.id).replaceWith(pokemonCard);
+      generateLvSelectEl('#card-' + data.id + ' .select-level');
+      $('#card-' + data.id + ' #niveau').change(function (e) {
+        calculateStat(data, $('#card-' + data.id + ' #niveau').val());
+      });
+    }
   }
 
 
@@ -94,8 +104,18 @@ $(document).ready(function () {
       'success': function (data) {
         console.log(data);
         render(data);
+      },
+      'error': function (data) {
+        $('#query').addClass('query-error').after('<div class="error">Ce pokemon n\'existe pas</div>');
       }
     };
     $.ajax(settings);
   });
+
+  $('#query').change(function(event){
+    $('#query').removeClass('query-error');
+    // $(document).remove('error');
+  });
 });
+
+

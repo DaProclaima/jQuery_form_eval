@@ -1,5 +1,5 @@
 let api_url = 'https://pokeapi.co/api/v2/';
-
+let arrayPkmon = [0];
 function init() {
   preparePrefill();
   $('#search-btn').click(function (e) {
@@ -121,56 +121,33 @@ function calculateStat(data, lvl = 1) {
 }
 
 function preparePrefill() {
-  let fso = new ActiveXObject("Scripting.FileSystemObject");
-  let txtFile = fso.CreateTextFile("./pokenames.txt", true);
-  txtFile.WriteLine('[');
-  let arrayNames = [];
-  let url = api_url + 'pokemon/';
+  // let fso = new ActiveXObject("Scripting.FileSystemObject");
+  // let txtFile = fso.CreateTextFile("./pokenames.txt", true);
+  // txtFile.WriteLine('[');
+
+  let url = api_url + 'pokemon/?offest=0&limit=964';
   let settings = {
     'async': true,
     'crossDomain': true,
     'type': 'GET',
     'url': url,
     'success': function (data) {
-      console.log(data);
-      let id = 1;
-      let limit = 0;
-      while (id <= data.count) {
-        let settings = {
-          'async': true,
-          'crossDomain': true,
-          'type': 'GET',
-          'url': url + id + '/',
-          'success': function (data) {
-            console.log(data);
-            setInterval(arrayNames.push(data.name), 1000);
-            id++;
-          },
-          'error': function (data) {
-            console.error('datas not fetched. the query did not work.');
-          }
-        };
-        let fso = new ActiveXObject("Scripting.FileSystemObject");
-        txtFile.WriteLine(data.name+',');
-
-        setInterval($.ajax(settings), 5000);
-        // if(limit < 10){
-        //   $.ajax(settings);
-        //   limit++;
-        // } else {
-        //   setInterval($.ajax(settings), 5000);
-        //   limit -= 10;
-        // }
+      let i = 1;
+      // console.log(data);
+      while (i < data.count) {
+        let obj = {};
+        obj.name = data.results[i].name;
+        obj.url = data.results[i].url;
+        arrayPkmon.push(obj);
+        i++;
       }
-      txtFile.WriteLine(']');
-      txtFile.Close();
     },
     'error': function (data) {
       console.error('datas not fetched. The url API is not correct.');
-
     }
   };
   $.ajax(settings);
+  console.log(arrayPkmon);
 }
 
 

@@ -39,3 +39,15 @@ body{
 .query-error{
   border-color:red
 }
+
+.block-prefill{
+  top: 10%;
+  font-size: 1.6rem;
+  height: 16rem;
+  position: absolute;
+  overflow: scroll;
+}
+.block-prefill > ul{
+  list-style: none;
+  color: black;
+}

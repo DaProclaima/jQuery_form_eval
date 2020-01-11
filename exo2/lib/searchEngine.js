@@ -1,36 +1,24 @@
 let api_url = 'https://pokeapi.co/api/v2/';
 let arrayPkmon = [0];
+let query = '';
+// let splitQuery = '';
+
 function init() {
   preparePrefill();
+  $('#query').keyup(function (e) {
+    e.preventDefault();
+    query = $('#query').val();
+    query = query.trim();
+    query = query.toLowerCase();
+
+    // console.log('val vaut ' + query);
+    compareInput(query);
+  });
   $('#search-btn').click(function (e) {
     e.preventDefault();
-
-    //function fetch datas
-    let query = $('#query').val();
-    // console.log('query vaut ' + query);
-    query = query.trim();
-    // console.log('query vaut ' + query);
-    let url = api_url + 'pokemon/' + query + '/';
-    let settings = {
-      'async': true,
-      'crossDomain': true,
-      'type': 'GET',
-      'url': url,
-      'success': function (data) {
-        console.log(data);
-        render(data);
-      },
-      'error': function (data) {
-        $('#query').addClass('query-error').after('<div class="error">Ce pokemon n\'existe pas</div>');
-      }
-    };
-    $('#query').change(function (event) {
-      $('#query').removeClass('query-error');
-      $('.error').remove();
-    });
-    $.ajax(settings);
-    // end of fetch datas?
+    fetchPokemon(query);
   });
+
 }
 
 function render(data) {
@@ -141,15 +129,96 @@ function preparePrefill() {
         arrayPkmon.push(obj);
         i++;
       }
+      arrayPkmon.sort(function (a, b) {
+        // console.log('hello world');
+        // console.log(a.name, b.name)
+        return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
+      });
+      // console.log(arrayPkmon);
     },
     'error': function (data) {
       console.error('datas not fetched. The url API is not correct.');
     }
   };
   $.ajax(settings);
-  console.log(arrayPkmon);
+  // console.log(arrayPkmon);
 }
 
+function compareInput(input) {
+  // console.log('Hello compareInput');
+  let arrayChances = [];
+  let splitQuery = [];
+
+  for(let i=0; i< input.length; i++){
+    // console.log('input'+i+' vaut '+ input[i]);
+    splitQuery.push(input[i]);
+    // console.log(splitQuery);
+  }
+  console.log(splitQuery);
+
+  for(let i=1;  i < arrayPkmon.length; i++){
+    let valid = [];
+    for (let j = 0; j < splitQuery.length; j++) {
+      console.log('splitQuery['+j+']= '+splitQuery[j]);
+      console.log('arrayPkmon['+i+'].name['+j+']= '+ arrayPkmon[i].name[j]);
+      let bool = '';
+      if(splitQuery[j] === arrayPkmon[i].name[j]) {
+        bool = true;
+        valid.push(bool);
+      } else {
+        bool = false;
+        valid.push(bool);
+        console.log('bool vaut '+ bool);
+        break;
+      }
+      console.log('bool vaut '+ bool);
+      // if valid contains only true, then send the pokemon name in the list of chances
+    }
+    console.log('valid = '+valid);
+
+    let loop = valid.length;
+    for(let k = 0; loop === valid.length; k++ ){
+      if( valid[k] === false){
+        loop -=1;
+        break;
+      }
+      if (k === valid.length){
+        break;
+      }
+    }
+    console.log('loop = '+ loop);
+    console.log('valid.length= '+ valid.length);
+    if (loop === valid.length && valid.length > 0){
+      arrayChances.push(i);
+    }
+  }
+  console.log('arrayChances = '+arrayChances);
+}
+
+function fetchPokemon(val) {
+  //function fetch datas
+
+  // console.log('query vaut ' + query);
+  let url = api_url + 'pokemon/' + query + '/';
+  let settings = {
+    'async': true,
+    'crossDomain': true,
+    'type': 'GET',
+    'url': url,
+    'success': function (data) {
+      console.log(data);
+      render(data);
+    },
+    'error': function (data) {
+      $('#query').addClass('query-error').after('<div class="error">Ce pokemon n\'existe pas</div>');
+    }
+  };
+  $('#query').keyup(function (event) {
+    $('#query').removeClass('query-error');
+    $('.error').remove();
+  });
+  $.ajax(settings);
+}
 
 $(document).ready(function () {
   init();

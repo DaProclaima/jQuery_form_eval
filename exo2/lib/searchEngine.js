@@ -1,28 +1,26 @@
 let api_url = 'https://pokeapi.co/api/v2/';
 let arrayChances = [];
 let arrayPkmon = [0];
+// let currentInputMoment = '';
 let prefill = '';
+// let previousInputMoment = Date.now();
 let query = '';
 
-// let splitQuery = '';
+// const WAITING_MOMENT = 1000;
+
 
 function init() {
   preparePrefill();
   $('#query').keyup(function (e) {
     e.preventDefault();
-    query = $('#query').val();
-    query = query.trim();
-    query = query.toLowerCase();
+    // delay();
+    getQueryVal();
     // console.log('val vaut ' + query);
-    setTimeout(function(){
-      if (query!== '') {
-        compareInput(query);
-        showPrefill();
-      }
-    }, 500);
+    if (query !== '') {
+      compareInput(query);
+      showPrefill();
+    }
   });
-
-
   $('#search-btn').click(function (e) {
     e.preventDefault();
     fetchPokemon(query);
@@ -119,22 +117,30 @@ function preparePrefill() {
 
 function compareInput(input) {
   // console.log('Hello compareInput');
+  let arrayChancesPrep = [];
   let splitQuery = [];
 
-  for(let i=0; i< input.length; i++){
-    // console.log('input'+i+' vaut '+ input[i]);
+  for (let i = 0; i < input.length; i++) {
+    // console.log('input['+i+'] vaut '+ input[i]);
     splitQuery.push(input[i]);
     // console.log(splitQuery);
   }
   // console.log(splitQuery);
 
-  for(let i=1;  i < arrayPkmon.length; i++){
+  for (let i = 1; i < arrayPkmon.length; i++) {
     let valid = [];
+    let looped = false;
     for (let j = 0; j < splitQuery.length; j++) {
       // console.log('splitQuery['+j+']= '+splitQuery[j]);
       // console.log('arrayPkmon['+i+'].name['+j+']= '+ arrayPkmon[i].name[j]);
-      let bool = '';
-      if(splitQuery[j] === arrayPkmon[i].name[j]) {
+      // let bool = '';
+      // if (splitQuery[0] !== arrayPkmon[i].name[0]) {
+      //   bool = false;
+      //   looped = true;
+      //   valid.push(bool);
+      //   break;
+      // }
+      if (splitQuery[j] === arrayPkmon[i].name[j]) {
         bool = true;
         valid.push(bool);
       } else {
@@ -149,9 +155,9 @@ function compareInput(input) {
     // console.log('valid = '+valid);
 
     let loop = valid.length;
-    for(let k = 0; loop === valid.length; k++ ){
-      if( valid[k] === false) {
-        loop -=1;
+    for (let k = 0; loop === valid.length; k++) {
+      if (valid[k] === false) {
+        loop -= 1;
         break;
       }
       if (k === valid.length) {
@@ -160,8 +166,16 @@ function compareInput(input) {
     }
     // console.log('loop = '+ loop);
     // console.log('valid.length= '+ valid.length);
-    if (loop === valid.length && valid.length > 0){
-      arrayChances.push(i);
+    if (loop === valid.length && valid.length > 0) {
+      console.log('i = ' + i);
+      arrayChancesPrep.push(i);
+      console.log('arrayChancesPrep = ' + arrayChancesPrep);
+    }
+    console.log('arrayChancesPrep = '+arrayChancesPrep);
+    arrayChances = arrayChancesPrep;
+
+    if (looped === true) {
+      break;
     }
   }
   // console.log('arrayChances = '+arrayChances);
@@ -195,22 +209,23 @@ function fetchPokemon(val) {
   $.ajax(settings);
 }
 
-function showPrefill(){
+function showPrefill() {
   // let listPkmon = [];
+  // console.log('arrayChances = ' + arrayChances);
   let liEl = '';
-  for(let i = 0; i < arrayChances.length; i++){
+  for (let i = 0; i < arrayChances.length; i++) {
     // console.log(arrayPkmon[arrayChances[i]].name);
-    liEl += '<li><a class="api-url" href="' +arrayPkmon[arrayChances[i]].url+ '">'+arrayPkmon[arrayChances[i]].name+'</a></li>';
+    liEl += '<li class="object-list-prefill"><a class="api-url" href="' + arrayPkmon[arrayChances[i]].url + '">' + arrayPkmon[arrayChances[i]].name + '</a></li>';
     // console.log(liEl);
   }
   // listPkmon.forEach(el => console.log('listPkmon.el.name = '+ el.name));
-  console.log('liEl.length = '+liEl.length);
-  prefill = `<div class= "block-prefill"><ul class="list-prefill">${liEl}</ul></div>`;
+  // console.log('liEl.length = ' + liEl.length);
+  prefill = `<div id= "block-prefill"><ul class="list-prefill">${liEl}</ul></div>`;
   //
 
-  if(document.querySelector('.block-prefill')){
-    $('.block-prefill').replaceWith(prefill);
-  } else{
+  if (document.querySelector('#block-prefill')) {
+    $('#block-prefill').replaceWith(prefill);
+  } else {
     $('#query').after(prefill);
   }
   // $('.api-url').click(function(event){
@@ -218,7 +233,7 @@ function showPrefill(){
   // })
 }
 
-function showCard(data){
+function showCard(data) {
   let pokemonCard = '<div class="card-pokemon" id="card-pokemon-' + data.id + '">' +
     '<div>' +
     '<div><span class="name">Nom: ' + data.name + '</span></div>' +
@@ -256,6 +271,31 @@ function showCard(data){
       calculateStat(data, $('#card-' + data.id + ' #niveau').val());
     });
   }
+}
+
+function delay() {
+  // console.log('click');
+  currentInputMoment = Date.now();
+  // console.log('previousInputMoment = ' + previousInputMoment);
+  console.log('currentInputMoment = ' + currentInputMoment);
+  // console.log('inferior currentInputMoment - previousInputMoment = ' + (currentInputMoment - previousInputMoment));
+  if ((currentInputMoment - previousInputMoment) < WAITING_MOMENT) {
+    console.log('inferior currentInputMoment - previousInputMoment = ' + (currentInputMoment - previousInputMoment));
+    previousInputMoment = currentInputMoment;
+    setTimeout(function () {
+      console.log('wait => '+Date.now());
+    }, 1000);
+  } else {
+    // console.log(' superior currentInputMoment - previousInputMoment = ' + (currentInputMoment - previousInputMoment));
+    previousInputMoment = currentInputMoment;
+  }
+
+}
+
+function getQueryVal() {
+  query = $('#query').val();
+  query = query.trim();
+  query = query.toLowerCase();
 }
 
 $(document).ready(function () {

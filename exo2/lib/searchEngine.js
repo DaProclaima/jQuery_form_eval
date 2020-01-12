@@ -215,7 +215,7 @@ function showPrefill() {
   let liEl = '';
   for (let i = 0; i < arrayChances.length; i++) {
     // console.log(arrayPkmon[arrayChances[i]].name);
-    liEl += '<li class="object-list-prefill"><a class="api-url" href="' + arrayPkmon[arrayChances[i]].url + '">' + arrayPkmon[arrayChances[i]].name + '</a></li>';
+    liEl += '<li class="object-list-prefill"><a class="api-url" id ="api-url-'+arrayPkmon[arrayChances[i]].name+'" href="'+arrayPkmon[arrayChances[i]].url + '">' + arrayPkmon[arrayChances[i]].name + '</a></li>';
     // console.log(liEl);
   }
   // listPkmon.forEach(el => console.log('listPkmon.el.name = '+ el.name));
@@ -228,9 +228,22 @@ function showPrefill() {
   } else {
     $('#query').after(prefill);
   }
-  // $('.api-url').click(function(event){
-  //   event.preventDefault
-  // })
+  $('.api-url').click(function(event){
+    event.preventDefault();
+    // console.log($(this).val());
+    let id = $(this).attr('id');
+    // console.log('id = '+id);
+    let urlSelected = document.querySelector('#'+id);
+    // console.log('urlSelected = '+urlSelected);
+    let nameSelected = $('#'+id).text();
+    // console.log('nameSelected = '+nameSelected);
+    $('#query').val(nameSelected);
+    query = nameSelected;
+    $('#block-prefill').fadeOut();
+
+    // console.log('$(\'.api-url\').val() = '+$('.api-url').val());
+    // $('#query').text()
+  })
 }
 
 function showCard(data) {

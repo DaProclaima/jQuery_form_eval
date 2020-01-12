@@ -281,7 +281,7 @@ function showCard(data) {
   } else {
 
     $('#card-pokemon-' + data.id).replaceWith(pokemonCard);
-    generateLvSelectEl('#card-' + data.id + ' .select-level');
+    generateLvSelectEl('#card-pokemon-' + data.id + ' .select-level');
     $('#card-' + data.id + ' #niveau').change(function (e) {
       // console.log('$(\'#card-pokemon\' + data.id + \' #niveau\').val() = '+ $('#card-pokemon-' + data.id + ' #niveau').val());
       calculateStat(data, $('#card-pokemon-' + data.id + ' #niveau').val());

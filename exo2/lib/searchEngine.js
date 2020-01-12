@@ -48,7 +48,7 @@ function generateLvSelectEl(el) {
 
 
 function calculateStat(data, lvl = 1) {
-  console.log('lvl: ' + lvl);
+  // console.log('lvl: ' + lvl);
   if (!(lvl == null || lvl == undefined || lvl == 0 || lvl == '')) {
     let stats = [];
     let stat = null;
@@ -109,6 +109,7 @@ function preparePrefill() {
     },
     'error': function (data) {
       console.error('datas not fetched. The url API is not correct.');
+      window.alert('Le nom de pokemon est incorrect')
     }
   };
   $.ajax(settings);
@@ -167,11 +168,11 @@ function compareInput(input) {
     // console.log('loop = '+ loop);
     // console.log('valid.length= '+ valid.length);
     if (loop === valid.length && valid.length > 0) {
-      console.log('i = ' + i);
+      // console.log('i = ' + i);
       arrayChancesPrep.push(i);
-      console.log('arrayChancesPrep = ' + arrayChancesPrep);
+      // console.log('arrayChancesPrep = ' + arrayChancesPrep);
     }
-    console.log('arrayChancesPrep = '+arrayChancesPrep);
+    // console.log('arrayChancesPrep = '+arrayChancesPrep);
     arrayChances = arrayChancesPrep;
 
     if (looped === true) {
@@ -274,14 +275,16 @@ function showCard(data) {
     $('#list-card').append(pokemonCard);
     generateLvSelectEl('#card-pokemon-' + data.id + ' .select-level');
     $('#card-pokemon-' + data.id + ' #niveau').change(function (e) {
-      calculateStat(data, $('#card-' + data.id + ' #niveau').val());
+      // console.log('$(\'#card-pokemon-\' + data.id + \' #niveau\').val() = '+ $('#card-pokemon-' + data.id + ' #niveau').val());
+      calculateStat(data, $('#card-pokemon-' + data.id + ' #niveau').val());
     });
   } else {
 
     $('#card-pokemon-' + data.id).replaceWith(pokemonCard);
     generateLvSelectEl('#card-' + data.id + ' .select-level');
     $('#card-' + data.id + ' #niveau').change(function (e) {
-      calculateStat(data, $('#card-' + data.id + ' #niveau').val());
+      // console.log('$(\'#card-pokemon\' + data.id + \' #niveau\').val() = '+ $('#card-pokemon-' + data.id + ' #niveau').val());
+      calculateStat(data, $('#card-pokemon-' + data.id + ' #niveau').val());
     });
   }
 }

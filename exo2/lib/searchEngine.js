@@ -1,7 +1,11 @@
 let api_url = 'https://pokeapi.co/api/v2/';
 let arrayChances = [];
 let arrayPkmon = [0];
+let arrayTypes = [];
+let arrayPkmonbyType = [];
 // let currentInputMoment = '';
+let selectedType = '';
+let selectedUrlType = '';
 let prefill = '';
 // let previousInputMoment = Date.now();
 let query = '';
@@ -11,6 +15,8 @@ let query = '';
 
 function init() {
   preparePrefill();
+  prepareArrayTypes();
+  // showSelectTypes();
   $('#query').keyup(function (e) {
     e.preventDefault();
     // delay();
@@ -24,6 +30,12 @@ function init() {
   $('#search-btn').click(function (e) {
     e.preventDefault();
     fetchPokemon(query);
+  });
+  $('#type-btn').click(function(e){
+    e.preventDefault();
+    fetchPokemonByType();
+    // console.log('hello world');
+
   });
 
 }
@@ -92,8 +104,9 @@ function preparePrefill() {
     'url': url,
     'success': function (data) {
       let i = 1;
-      // console.log(data);
+      // console.log('data = '+ data);
       while (i < data.count) {
+        // console.log('data.results.['+i+'] = '+JSON.stringify(data.results[i]));
         let obj = {};
         obj.name = data.results[i].name;
         obj.url = data.results[i].url;
@@ -109,7 +122,7 @@ function preparePrefill() {
     },
     'error': function (data) {
       console.error('datas not fetched. The url API is not correct.');
-      window.alert('Le nom de pokemon est incorrect')
+      window.alert('datas not fetched. The url API is not correct. Contact the website admin');
     }
   };
   $.ajax(settings);
@@ -216,7 +229,7 @@ function showPrefill() {
   let liEl = '';
   for (let i = 0; i < arrayChances.length; i++) {
     // console.log(arrayPkmon[arrayChances[i]].name);
-    liEl += '<li class="object-list-prefill"><a class="api-url" id ="api-url-'+arrayPkmon[arrayChances[i]].name+'" href="'+arrayPkmon[arrayChances[i]].url + '">' + arrayPkmon[arrayChances[i]].name + '</a></li>';
+    liEl += '<li class="object-list-prefill"><a class="api-url" id ="api-url-' + arrayPkmon[arrayChances[i]].name + '" href="' + arrayPkmon[arrayChances[i]].url + '">' + arrayPkmon[arrayChances[i]].name + '</a></li>';
     // console.log(liEl);
   }
   // listPkmon.forEach(el => console.log('listPkmon.el.name = '+ el.name));
@@ -229,14 +242,14 @@ function showPrefill() {
   } else {
     $('#query').after(prefill);
   }
-  $('.api-url').click(function(event){
+  $('.api-url').click(function (event) {
     event.preventDefault();
     // console.log($(this).val());
     let id = $(this).attr('id');
     // console.log('id = '+id);
-    let urlSelected = document.querySelector('#'+id);
+    let urlSelected = document.querySelector('#' + id);
     // console.log('urlSelected = '+urlSelected);
-    let nameSelected = $('#'+id).text();
+    let nameSelected = $('#' + id).text();
     // console.log('nameSelected = '+nameSelected);
     $('#query').val(nameSelected);
     query = nameSelected;
@@ -244,7 +257,7 @@ function showPrefill() {
 
     // console.log('$(\'.api-url\').val() = '+$('.api-url').val());
     // $('#query').text()
-  })
+  });
 }
 
 function showCard(data) {
@@ -299,7 +312,7 @@ function delay() {
     console.log('inferior currentInputMoment - previousInputMoment = ' + (currentInputMoment - previousInputMoment));
     previousInputMoment = currentInputMoment;
     setTimeout(function () {
-      console.log('wait => '+Date.now());
+      console.log('wait => ' + Date.now());
     }, 1000);
   } else {
     // console.log(' superior currentInputMoment - previousInputMoment = ' + (currentInputMoment - previousInputMoment));
@@ -312,6 +325,113 @@ function getQueryVal() {
   query = $('#query').val();
   query = query.trim();
   query = query.toLowerCase();
+}
+
+function prepareArrayTypes() {
+
+  let url = api_url + 'type/';
+  let settings = {
+    'async': true,
+    'crossDomain': true,
+    'type': 'GET',
+    'url': url,
+    'success': function (data) {
+      // console.log('data.count = ' + JSON.stringify(data)); //
+      for (let i = 1; i < data.count; i++) {
+        let object = {};
+        object.name = data.results[i].name;
+        // console.log('object.name = '+object.name);
+        object.url = data.results[i].url;
+        // console.log('object.url = '+object.url);
+        //console.log('data.result[i].name = ' + data.results[i].name);
+
+        // console.log('object = '+object);
+        arrayTypes.push(object);
+      }
+      // console.log('arrTypes = '+ JSON.stringify(arrayTypes));
+      // console.log('arrayTypes.length = '+ arrayTypes.length);
+      showSelectTypes()
+    }
+
+  };
+
+  $.ajax(settings);
+
+}
+
+function showSelectTypes(){
+  // console.log('hello showSelect');
+  let optionEls= '';
+
+  // console.log('arrayTypes.length = '+ arrayTypes.length);
+  for(let i = 0; i < arrayTypes.length; i++) {
+    // console.log('i = '+ i);
+    optionEls += `<option class='option-type'value="${arrayTypes[i].name}">${arrayTypes[i].name}</option>`;
+    // console.log('optionEls = '+ optionEls);
+  }
+  // console.log('optionEls = '+ optionEls);
+  $('#pokemon-types').append(optionEls);
+  $('#pokemon-types').change(function(e){
+    e.preventDefault();
+    if($('.option-type:selected').val() !== undefined){
+
+      // console.log('val selected = '+$('.option-type:selected').val());
+      selectedType = $('.option-type:selected');
+      // console.log('selectedType = '+ JSON.stringify(selectedType));
+      selectedType = selectedType.val();
+      // console.log('selectedType = '+ selectedType);
+      for(let i = 0; i < arrayTypes.length; i++){
+        if(arrayTypes[i].name === selectedType){
+          // console.log('arrayTypes['+i+'].url = ' +arrayTypes[i].url);
+          selectedUrlType = arrayTypes[i].url;
+          console.log('selectedUrlType = ' +selectedUrlType);
+          break;
+        }
+      }
+    }
+  })
+}
+
+
+function fetchPokemonByType(){
+  let url = selectedUrlType;
+  let settings = {
+    'async': true,
+    'crossDomain': true,
+    'type': 'GET',
+    'url': url,
+    'success': function (data) {
+      // console.log('arrayPkmonbyType = '+ arrayPkmonbyType);
+      // console.log(JSON.stringify(data.pokemon));
+
+      // console.log('PkmonbyType = '+ JSON.stringify(arrayPkmonbyType));
+      for(let i=0; i < data.pokemon.length; i++){
+        // console.log(JSON.stringify(data.pokemon[i].pokemon.name));
+        let obj = {
+          type: selectedType,
+          name: data.pokemon[i].pokemon.name,
+          url: data.pokemon[i].pokemon.url
+        };
+        arrayPkmonbyType.push(obj);
+        console.log('PkmonbyType = '+ JSON.stringify(arrayPkmonbyType));
+        showPokemonByType();
+      }
+
+
+    }
+  };
+  $.ajax(settings);
+
+}
+
+function showPokemonByType(){
+  console.log('arrayPkmonbyType.length = '+arrayPkmonbyType.length);
+  let listCardEl = `<div id="list-card"><ul>`;
+  for( let i = 0; i < arrayPkmonbyType.length; i++){
+    listCardEl += `<li><a>${arrayPkmonbyType[i].name}</a></li>`
+  }
+  listCardEl +=`</ul></div>`;
+  $('#list-card').replaceWith(listCardEl);
 }
 
 $(document).ready(function () {

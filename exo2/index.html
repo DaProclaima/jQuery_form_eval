@@ -12,13 +12,22 @@
     <h1>Rechercher</h1>
   </header>
   <section>
-    <form id="search-form" name="search-form">
-      <div class="fieldcontainer">
+    <div class="fieldcontainer">
+      <form id="search-form" name="search-form">
         <input type="search" id="query" class="search-field" placeholder="Entrer un nom de pokémon"
                autocomplete="off">
-        <input type="submit" name="search-btn" id="search-btn" value="send">
-      </div>
-    </form>
+        <input type="submit" name="search-btn" id="search-btn" value="envoyer">
+      </form>
+      <h2>Ou bien</h2>
+      <form id="type-select-form" name="type-form">
+        <label for="pokemon-types">Sélectionner le type de pokémon</label>
+        <select name="pokemon-types" id="pokemon-types">
+          <option value="">choisir le type</option>
+        </select>
+        <input type="submit" name="type-btn" id="type-btn" value="envoyer">
+      </form>
+    </div>
+
 
     <ul id="results"></ul>
     <div id="buttons"></div>

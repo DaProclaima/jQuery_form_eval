@@ -46,6 +46,8 @@ $(document).ready(function() {
         setTextSlideHeight();
       }
     }
+
+
     function tSlideChangerLeft() {
       if ($(''+ sliderName +' .current-t-slide').prev().hasClass('t-slide') && tSliderHasStopped()) {
         $(''+ sliderName +' .current-t-slide').removeClass('current-t-slide').css($hiddenSlideStylesRight).prev().css($tSlideInStyles).addClass('current-t-slide');
@@ -68,6 +70,8 @@ $(document).ready(function() {
         }
       });
     }
+
+
     function tSetCssLeft() {
       $t_total = $(''+ sliderName +' .t-slide').length - 1;
       $(''+ sliderName +' .t-slide').each(function(index, value) {
@@ -76,7 +80,6 @@ $(document).ready(function() {
         }
       });
     }
-
 
     //populate dots for every slide
     $(''+ sliderName +' .t-slide').each(function(index, value) {
